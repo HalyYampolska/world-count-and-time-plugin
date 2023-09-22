@@ -6,6 +6,8 @@ Plugin Name: Our Test Plugin
     Version: 1.0
     Author: Halyna 
     Author URL: https://halynayampolska.com/
+    Text Domain: wcpdonain
+    Domain Path: /languages
 */
 
 class WordCountAndTimePlugin {
@@ -13,6 +15,11 @@ class WordCountAndTimePlugin {
         add_action('admin_menu', array($this, 'adminPage'));
         add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'ifWrap'));
+        add_action('init', array($this, 'languages'));
+    }
+
+    function languages() {
+        load_plugin_textdomain('wcpdomain', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
     function ifWrap($content) {
@@ -36,7 +43,7 @@ class WordCountAndTimePlugin {
         }
 
         if (get_option('wcp_wordcount', '1')) {
-            $html .= 'This post has ' . $wordCount . ' words. <br>';
+            $html .= __('This post has', 'wcpdomain') . ' ' . $wordCount . ' ' . __('words', 'wcpdomain') . '.<br>';
         }
 
         if (get_option('wcp_charactercount', '1')) {
@@ -124,7 +131,7 @@ class WordCountAndTimePlugin {
 
 
     function adminPage() {
-        add_options_page('Word Count Settings', 'Word Count', 'manage_options', 'word-count-settings-page', 
+        add_options_page('Word Count Settings', __('Word Count', 'wcpdomain'), 'manage_options', 'word-count-settings-page', 
         array($this, 'ourHTML'));
     }
     
